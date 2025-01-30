@@ -213,9 +213,12 @@ GCNextractor::GCNextractor(int _nfeatures, float _scaleFactor, int _nlevels,
         ++v0;
     }
 
+    torch::DeviceType device_type;
+    device_type = torch::kCPU;
+    torch::Device device(device_type);
     const char *net_fn = getenv("GCN_PATH");
     net_fn = (net_fn == nullptr) ? "gcn2.pt" : net_fn;
-    module = torch::jit::load(net_fn);
+    module = torch::jit::load(net_fn, device);
 
 }
 
@@ -223,7 +226,7 @@ void GCNextractor::operator()( InputArray _image, InputArray _mask, vector<KeyPo
 { 
 
     torch::DeviceType device_type;
-    device_type = torch::kCUDA;
+    device_type = torch::kCPU;
     torch::Device device(device_type);
 
     if(_image.empty())
