@@ -35,16 +35,6 @@ RUN apt-get install -y \
     python3-pip \
     python-all-dev
 
-# opencv 需要
-RUN echo -e "deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ xenial main multiverse restricted universe\n\
-    deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ xenial-security main multiverse restricted universe\n\
-    deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ xenial-updates main multiverse restricted universe\n\
-    deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ xenial-backports main multiverse restricted universe\n\
-    deb-src http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ xenial main multiverse restricted universe\n\
-    deb-src http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ xenial-security main multiverse restricted universe\n\
-    deb-src http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ xenial-updates main multiverse restricted universe" >> /etc/apt/sources.list && \
-    apt-get -y update && \
-    apt-get install -y libjasper1 libjasper-dev
 
 # opencv需要
 RUN apt-get install -y \
@@ -58,6 +48,21 @@ RUN apt-get install -y \
     libjpeg.dev \
     libtiff5.dev \
     libswscale-dev
+
+ARG TARGETARCH
+COPY install/libjasper /tmp/install/libjasper
+RUN if [ "$TARGETARCH" = "amd64" ]; then \
+        echo "Installing libjasper for amd64"; \
+        chmod 777 /tmp/install/libjasper/install_libjasper_amd64.sh; \
+        /tmp/install/libjasper/install_libjasper_amd64.sh; \
+    elif [ "$TARGETARCH" = "arm64" ]; then \
+        echo "Installing libjasper for arm64"; \
+        chmod 777 /tmp/install/libjasper/install_libjasper_arm64.sh; \
+        /tmp/install/libjasper/install_libjasper_arm64.sh; \
+    else \
+        echo "Unsupported architecture for install libjasper: $TARGETARCH"; \
+        exit 1; \
+    fi
 
 # pangolin需要
 RUN apt-get install -y \
