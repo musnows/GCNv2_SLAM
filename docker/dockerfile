@@ -1,42 +1,12 @@
-FROM ubuntu:18.04
+# this images is build from dockerfile.base
+FROM musnows/ubuntu:18.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Shanghai
 
 SHELL ["/bin/bash", "-c"]
 
-# 工具组
-RUN apt-get update  && apt-get upgrade -y  && \
-    apt-get install -y \
-    apt-utils \
-    curl wget \
-    cmake make automake \
-    openssh-server \
-    net-tools \
-    vim \
-    git \
-    gcc g++ \
-    unzip
-
-# x11依赖项
-RUN apt-get install -y  \
-    libx11-xcb1 \
-    libfreetype6 \
-    libdbus-1-3 \
-    libfontconfig1 \
-    libxkbcommon0   \
-    libxkbcommon-x11-0
-
-# python
-RUN apt-get install -y \
-    python-dev \
-    python-pip \
-    python3-dev \
-    python3-pip \
-    python-all-dev
-
-
-# opencv需要
+# opencv
 RUN apt-get install -y \
     libc-ares-dev \
     libssl-dev \
@@ -64,7 +34,7 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
         exit 1; \
     fi
 
-# pangolin需要
+# pangolin
 RUN apt-get install -y \
     libgl1-mesa-dev \
     libglew-dev \
