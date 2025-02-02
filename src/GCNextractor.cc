@@ -267,7 +267,7 @@ void GCNextractor::operator()( InputArray _image, InputArray _mask, vector<KeyPo
 
     std::vector<torch::jit::IValue> inputs;
     inputs.push_back(img_var);
-    auto output = module->forward(inputs).toTuple();
+    auto output = module.forward(inputs).toTuple();
 
     auto pts  = output->elements()[0].toTensor().to(torch::kCPU).squeeze();
     auto desc = output->elements()[1].toTensor().to(torch::kCPU).squeeze();
